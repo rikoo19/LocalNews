@@ -150,6 +150,11 @@ class App extends React.Component {
       }
       const response = await fetch(url);
       const data = await response.json();
+
+      if (response.status === 429) {
+        throw new Error('Batas permintaan API terlampaui (429). Batas gratis GNews adalah 100 request/hari. Silakan tunggu hingga reset (24 jam) atau dapatkan API key baru di gnews.io');
+      }
+
       if (data.articles) {
         let articles = data.articles || [];
         // Filter hanya artikel dengan gambar jika checkbox dicentang
@@ -376,6 +381,11 @@ function AppWithHooks(props) {
       }
       const response = await fetch(url);
       const data = await response.json();
+
+      if (response.status === 429) {
+        throw new Error('Batas permintaan API terlampaui (429). Batas gratis GNews adalah 100 request/hari. Silakan tunggu hingga reset (24 jam) atau dapatkan API key baru di gnews.io');
+      }
+
       if (data.articles) {
         let filteredArticles = data.articles || [];
         if (showImagesOnly) {
