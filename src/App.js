@@ -368,6 +368,7 @@ function AppWithHooks(props) {
 
   // Fetch news function
   const fetchNews = async () => {
+    console.log('fetchNews called - API request initiated');
     setLoading(true);
     setError('');
     setHasSearched(true);
@@ -379,8 +380,11 @@ function AppWithHooks(props) {
       } else {
         url = `${NEWS_API_URL}?lang=id&country=id&topic=${category}&max=10&apikey=${API_KEY}`;
       }
+      console.log('Fetching URL:', url);
       const response = await fetch(url);
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('API Response Data:', data);
 
       if (response.status === 429) {
         throw new Error('Batas permintaan API terlampaui (429). Batas gratis GNews adalah 100 request/hari. Silakan tunggu hingga reset (24 jam) atau dapatkan API key baru di gnews.io');
