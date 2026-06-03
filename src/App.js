@@ -4,8 +4,8 @@ import './App.css';
 import { Routes, Route, Link } from 'react-router-dom';
 import About from './About';
 
-const NEWS_API_URL = 'https://gnews.io/api/v4/top-headlines';
-const SEARCH_API_URL = 'https://gnews.io/api/v4/search';
+const NEWS_API_URL = '/api/news';
+const SEARCH_API_URL = '/api/news';
 const API_KEY = 'b60bbf17dbfbed23f66ab704776272dc';
 
 // Komponen TextBox
@@ -138,16 +138,20 @@ class App extends React.Component {
     const { searchQuery, category, showImagesOnly } = this.state;
     this.setState({ loading: true, error: '', hasSearched: true });
     try {
-      // GNews API format
-      let url;
       const safeQuery = typeof searchQuery === 'string' ? searchQuery : '';
+      const params = new URLSearchParams();
+      params.append('lang', 'id');
+      params.append('country', 'id');
+      params.append('max', '10');
+      params.append('apikey', API_KEY);
+      
       if (safeQuery.trim()) {
-        // Gunakan search endpoint jika ada query
-        url = `${SEARCH_API_URL}?q=${encodeURIComponent(safeQuery)}&lang=id&country=id&max=10&apikey=${API_KEY}`;
+        params.append('q', safeQuery);
       } else {
-        // Gunakan top-headlines dengan kategori
-        url = `${NEWS_API_URL}?lang=id&country=id&topic=${category}&max=10&apikey=${API_KEY}`;
+        params.append('topic', category);
       }
+
+      const url = `${NEWS_API_URL}?${params.toString()}`;
       const response = await fetch(url);
       const data = await response.json();
 
@@ -373,13 +377,20 @@ function AppWithHooks(props) {
     setError('');
     setHasSearched(true);
     try {
-      let url;
       const safeQuery = typeof searchQuery === 'string' ? searchQuery : '';
+      const params = new URLSearchParams();
+      params.append('lang', 'id');
+      params.append('country', 'id');
+      params.append('max', '10');
+      params.append('apikey', API_KEY);
+      
       if (safeQuery.trim()) {
-        url = `${SEARCH_API_URL}?q=${encodeURIComponent(safeQuery)}&lang=id&country=id&max=10&apikey=${API_KEY}`;
+        params.append('q', safeQuery);
       } else {
-        url = `${NEWS_API_URL}?lang=id&country=id&topic=${category}&max=10&apikey=${API_KEY}`;
+        params.append('topic', category);
       }
+
+      const url = `${NEWS_API_URL}?${params.toString()}`;
       console.log('Fetching URL:', url);
       const response = await fetch(url);
       console.log('Response status:', response.status);
